@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-96">
+        {% if op %}
+            <div class="mb-6">
+                {% for i in op %}
+                    <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">{{ i }}</h3>
+                {% endfor %}
+            </div>
+
+        {% elif not_found %}
+
+        <div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">No Matching Record Found </span>
+            <button class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="clk()">
+                <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20">
+                    <title>Close</title>
+                    <path
+                        d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+            </button>
+        </div>
+        
+        {% endif %}
+
+        <script>function clk(){
+            document.getElementById('error').style.display = "none";
+          }</script>
+
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Upload Files to Compute Hashes</h1>
+        <input type="file" id="fileInput" class="mb-4 border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button id="computeHashButton" class="w-full py-3 px-4 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">Compute Hash</button>
+        <div id="results" class="mb-4 text-gray-700"></div>
+
+        <form action="verify" method="post">
+            {% csrf_token %}
+            <input id="hashhauler" type="text" name="hash" hidden>
+
+            <button type="submit" id="sh" class="w-full py-3 px-4 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200" disabled>Verify</button>
+        </form>
+    </div>
+
+    <script>
+        const hashhauler = document.getElementById("hashhauler");
+        const sbutton = document.getElementById("sh");
+        sbutton.disabled = true;
+
+        document.getElementById('computeHashButton').onclick = async () => {
+            const fileInput = document.getElementById('fileInput');
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (fileInput.files.length === 0) {
+                resultsDiv.innerHTML = '<p class="text-red-500">Please select a file.</p>';
+                return;
+            }
+
+            const hash = await computeFileHash(fileInput.files[0]);
+            hashhauler.value = hash;
+            resultsDiv.innerHTML += `<p class="text-gray-800 font-medium">${fileInput.files[0].name}: <span class="font-semibold text-blue-600">${hash}</span></p>`;
+
+            if (hashhauler.value) {
+                sbutton.disabled = false;
+            }
+        };
+
+        async function computeFileHash(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-512', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+    </script>
+</body>
+
+</html>
+
+<!-- This file will be the main file to compute the files hashes -->

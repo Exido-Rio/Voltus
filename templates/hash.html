@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compute Hashing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 w-96">
+        <h1 class="text-2xl font-bold mb-4 text-center">Upload Files to Compute Hashes</h1>
+        <input type="file" id="fileInput" multiple class="mb-4 border border-gray-300 rounded-lg p-2 w-full" />
+        <button id="computeHashButton" class="w-full py-2 px-4 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Compute Hashes</button>
+        <div id="results" class="mb-4 text-gray-700"></div>
+
+        <form action="locker" method="post">
+            {% csrf_token %}
+            <input id="hashhauler" type="text" name="hashes" hidden>
+            <input id="namehauler" type="text" name="names" hidden>
+
+            <button type="submit" id="sh" class="w-full py-2 px-4 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500" disabled>Send Hashes</button>
+        </form>
+    </div>
+
+    <script>
+        const hashhauler = document.getElementById("hashhauler");
+        const namehauler = document.getElementById("namehauler");
+        const sbutton = document.getElementById("sh");
+        sbutton.disabled = true;
+
+        document.getElementById('computeHashButton').onclick = async () => {
+            var hashes = [];
+            var names = [];
+            const fileInput = document.getElementById('fileInput');
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (fileInput.files.length === 0) {
+                resultsDiv.innerHTML = '<p class="text-red-500">Please select files.</p>';
+                return;
+            }
+
+            for (const file of fileInput.files) {
+                const hash = await computeFileHash(file);
+                names.push(file.name.split(".")[0]);
+                hashes.push(hash);
+                resultsDiv.innerHTML += `<p>${file.name}: <span class="font-semibold">${hash}</span></p>`;
+            }
+            hashhauler.value = hashes;
+            namehauler.value = names;
+            if (hashhauler.value) {
+                sbutton.disabled = false;
+            }
+        };
+
+        async function computeFileHash(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-512', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+    </script>
+</body>
+
+</html>

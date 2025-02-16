@@ -1,0 +1,120 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('https://media.istockphoto.com/id/1987307560/photo/big-data-visualisation-abstract-digital-particles-cyber-network-background-technology-backdrop.webp?s=2048x2048&w=is&k=20&c=s9cG8QycQY-gU2uHv16bMsoBZIVlqLA4C0p7FU-cd9E=');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-50">
+
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Welcome to Certificate  Verification System</h1>
+        <p class="text-center text-gray-600 mb-6">Connect your wallet to access exclusive features and services.</p>
+
+        {% if authenticated %}
+        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Dashboard</h2>
+        <ul class="space-y-2">
+
+            {% if verified %}
+            <li>
+                <a href="locker" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Locker</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="apply" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Apply for your account Verification</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="logout" onclick="document.cookie = 'auth=; Path=/;';" class="block text-center text-white bg-red-500 hover:bg-red-600 rounded-lg py-2 transition">Logout</a>
+            </li>
+        </ul>
+        {% else %}
+        <div class="text-center mb-4">
+            <button id="connectButton" type="button" class="w-full text-white bg-green-500 hover:bg-green-600 rounded-lg py-2 transition">
+                Connect with MetaMask
+            </button>
+            <div id="status" class="mt-2 text-gray-600"></div>
+        </div>
+
+        <form action="" method="post" class="mt-4">
+            {% csrf_token %}
+            <input type="text" id="walletaddress" name="walletaddress" hidden>
+            <input type="text" id="message" name="message" value="{{message}}" hidden>
+            <input type="text" id="signature" name="signature" hidden>
+
+            <button disabled type="submit" id="login" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg py-2 transition">
+                Sign in with Wallet
+            </button>
+        </form>
+        {% endif %}
+
+        <ul class="mt-4">
+            <li>
+                <a href="verify" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Verify Certificate</a>
+            </li>
+        </ul>
+
+        <footer class="mt-6 text-center text-gray-500">
+            <p>&copy; 2024 VOLTUS.Pvt.Ltd All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script>
+        // this causes the popup to the wallets (like metamask to sign the msg for auth )
+        const message = document.getElementById("message").value;
+        const walletaddress = document.getElementById("walletaddress");
+        const signature_msg = document.getElementById("signature");
+        const loginbutton = document.getElementById("login");
+        loginbutton.disabled = true;
+
+        document.getElementById('connectButton').onclick = async () => {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const wAddress = accounts[0];
+                    if (wAddress) {
+                        loginbutton.disabled = false;
+                        walletaddress.value = wAddress;
+                        document.getElementById('status').innerText = `Connected: ${wAddress}`;
+                        document.getElementById("connectButton").innerHTML = "Connected!";
+
+                        // signing the msg 
+                        const signature = await window.ethereum.request({
+                            method: 'personal_sign',
+                            params: [walletaddress.value, message],
+                        });
+
+                        signature_msg.value = signature;
+
+                        console.log(message.value);
+                        console.log(document.getElementById("signature").value);
+                    } else {
+                        document.getElementById('status').innerText = `Failed to connect, try again.`;
+                    }
+                } catch (error) {
+                    console.error("Error connecting wallet:", error);
+                    document.getElementById('status').innerText = 'Error: ' + error.message;
+                }
+            } else {
+                document.getElementById('status').innerText = "Please install MetaMask!";
+            }
+        };
+    </script>
+</body>
+
+</html>
+

@@ -1,5 +1,7 @@
 # Voltus
 Voltus is a tamper-proof certificate verification system built using Solidity and Django. It allows organizations to securely store issued certificates on the blockchain, ensuring authenticity and preventing fraud.
+* It is created using solidity for writting contract and Django as backend 
+* web3.js for wallet interction in browser 
 
 <p align="center">
 <a href="https://github.com/Exido-Rio"><img title="Github" src="https://img.shields.io/badge/Creator-Exido--Rio-brightgreen"></a>

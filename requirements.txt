@@ -1,5 +1,5 @@
 Django==5.1.1
-eth_account==0.13.3
+eth_account==0.13.7
 jose==1.0.0
 py_solc_x==2.0.4
 python_jose==3.5.0

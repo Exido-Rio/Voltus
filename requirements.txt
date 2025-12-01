@@ -3,5 +3,5 @@ eth_account==0.13.7
 jose==1.0.0
 py_solc_x==2.0.4
 python_jose==3.5.0
-redis==6.4.0
+redis==7.1.0
 web3==7.12.1

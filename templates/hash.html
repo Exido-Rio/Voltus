@@ -1,59 +1,326 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compute Hashing</title>
+    <title>Certificate Locker — VOLTUS Enterprise</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .btn-press {
+            transition: transform 100ms var(--ease-out), background-color 150ms ease, border-color 150ms ease;
+        }
+        .btn-press:active {
+            transform: scale(0.98);
+        }
+        .saas-card {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .dropzone-active {
+            border-color: #3b82f6 !important;
+            background-color: rgba(59, 130, 246, 0.08) !important;
+        }
+        .animate-fade-in {
+            animation: fadeIn 350ms var(--ease-out) forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
-    <div class="bg-white shadow-md rounded-lg p-6 w-96">
-        <h1 class="text-2xl font-bold mb-4 text-center">Upload Files to Compute Hashes</h1>
-        <input type="file" id="fileInput" multiple class="mb-4 border border-gray-300 rounded-lg p-2 w-full" />
-        <button id="computeHashButton" class="w-full py-2 px-4 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Compute Hashes</button>
-        <div id="results" class="mb-4 text-gray-700"></div>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-blue-600 selection:text-white">
 
-        <form action="locker" method="post">
-            {% csrf_token %}
-            <input id="hashhauler" type="text" name="hashes" hidden>
-            <input id="namehauler" type="text" name="names" hidden>
+    <!-- Global Header -->
+    <header class="w-full bg-[#090d16]/90 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg font-bold tracking-tight text-white">VOLTUS</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono border border-gray-700">Certificate Locker</span>
+                </div>
+            </a>
 
-            <button type="submit" id="sh" class="w-full py-2 px-4 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500" disabled>Send Hashes</button>
-        </form>
-    </div>
+            <nav class="flex items-center space-x-3 text-sm font-medium">
+                <a href="/" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-gray-400"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/history" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="history" class="w-4 h-4 text-blue-400"></i>
+                    <span>History</span>
+                </a>
+                <a href="/verify" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="search" class="w-4 h-4 text-blue-400"></i>
+                    <span>Verify Document</span>
+                </a>
+                <a href="/docs" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="book-open" class="w-4 h-4 text-gray-400"></i>
+                    <span>Docs</span>
+                </a>
+                <a href="/apply" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="building-2" class="w-4 h-4 text-gray-400"></i>
+                    <span>Organization</span>
+                </a>
+                <a href="/logout" onclick="document.cookie = 'auth=; Path=/;';" class="btn-press px-3.5 py-2 rounded-lg text-rose-400 hover:bg-rose-950/30 border border-rose-900/40 transition flex items-center space-x-1.5">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-6 py-10">
+        
+        <div class="saas-card rounded-2xl p-8 animate-fade-in">
+            <!-- Header Bar -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-gray-800 gap-4">
+                <div>
+                    <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-blue-950/60 border border-blue-800/60 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <i data-lucide="lock" class="w-3.5 h-3.5 text-blue-400"></i>
+                        <span>Issuer Locker</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white">Anchor Certificates On-Chain</h1>
+                    <p class="text-gray-400 text-xs md:text-sm mt-1">
+                        Compute SHA-512 Digests locally & submit records to Solidity smart contract <code class="mono text-blue-400">Locker.sol</code>.
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-950/50 border border-emerald-800/60 text-emerald-400 text-xs font-medium self-start md:self-auto">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Sepolia Network Online</span>
+                </div>
+            </div>
+
+            {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                <div class="p-4 text-sm rounded-xl border flex items-center space-x-3 {% if message.tags == 'error' %}bg-rose-950/40 border-rose-800/60 text-rose-300{% else %}bg-emerald-950/40 border-emerald-800/60 text-emerald-300{% endif %}">
+                    <i data-lucide="{% if message.tags == 'error' %}alert-circle{% else %}check-circle-2{% endif %}" class="w-5 h-5 flex-shrink-0"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if results %}
+            <!-- Receipt Card -->
+            <div class="mb-8 p-6 rounded-xl bg-gray-900 border border-blue-500/30 space-y-4">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="receipt" class="w-4 h-4 text-blue-400"></i>
+                        <span>Blockchain Confirmation Receipt</span>
+                    </h3>
+                    <span class="text-xs font-mono text-gray-400">Smart Contract: Locker.sol</span>
+                </div>
+
+                {% for res in results %}
+                <div class="p-3.5 rounded-lg bg-gray-950 border border-gray-800 space-y-1.5 text-xs">
+                    <div class="flex items-center justify-between font-semibold">
+                        <span class="text-gray-200 flex items-center space-x-2">
+                            <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
+                            <span>{{ res.name }}</span>
+                        </span>
+                        {% if res.success %}
+                        <span class="text-emerald-400 font-semibold flex items-center space-x-1">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            <span>Committed On-Chain</span>
+                        </span>
+                        {% elif res.already_exists %}
+                        <span class="text-amber-400 font-semibold flex items-center space-x-1">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                            <span>Already Anchored</span>
+                        </span>
+                        {% else %}
+                        <span class="text-rose-400 font-semibold flex items-center space-x-1">
+                            <i data-lucide="x-circle" class="w-4 h-4"></i>
+                            <span>Commit Failed</span>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <p class="text-gray-400 font-mono truncate"><span class="text-gray-500">Digest:</span> {{ res.hash }}</p>
+                    {% if res.error %}
+                    <p class="text-amber-300 font-medium text-xs mt-1">{{ res.error }}</p>
+                    {% endif %}
+                    {% if res.tx_hash %}
+                    <p class="text-blue-400 font-mono truncate"><span class="text-gray-500">Tx Hash:</span> {{ res.tx_hash }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Dropzone -->
+            <div id="dropzone" class="mb-6 border-2 border-dashed border-gray-800 hover:border-blue-500 rounded-2xl p-8 text-center bg-gray-900/50 transition duration-150 cursor-pointer group">
+                <input type="file" id="fileInput" multiple class="hidden" />
+                
+                <div class="w-14 h-14 mx-auto rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-3 group-hover:scale-105 transition-transform">
+                    <i data-lucide="upload-cloud" class="w-7 h-7"></i>
+                </div>
+                
+                <h3 class="text-base font-bold text-white mb-1">Select Certificate Files or Drag & Drop</h3>
+                <p class="text-gray-400 text-xs mb-4">Upload PDF diplomas, image certificates, or transcripts</p>
+                
+                <button type="button" onclick="document.getElementById('fileInput').click()" class="btn-press py-2 px-4 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold border border-gray-700 inline-flex items-center space-x-2">
+                    <i data-lucide="file-plus" class="w-4 h-4 text-blue-400"></i>
+                    <span>Browse Local Files</span>
+                </button>
+            </div>
+
+            <!-- Compute Hash Button -->
+            <button id="computeHashButton" type="button" class="btn-press w-full py-3 px-4 mb-6 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold border border-gray-700 flex items-center justify-center space-x-2">
+                <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
+                <span>Compute Client SHA-512 Digests (SubtleCrypto)</span>
+            </button>
+
+            <!-- Results List / Table -->
+            <div id="results" class="mb-6 space-y-2 max-h-72 overflow-y-auto"></div>
+
+            <!-- Form -->
+            <form action="/locker" method="post">
+                {% csrf_token %}
+                <input id="hashhauler" type="hidden" name="hashes">
+                <input id="namehauler" type="hidden" name="names">
+
+                <button type="submit" id="sh" class="btn-press w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-white text-sm shadow-sm flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed" disabled>
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Publish Certificate Hashes to Smart Contract</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#090d16] border-t border-gray-800 py-6 px-6 text-xs text-gray-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
+                <span class="font-semibold text-gray-400">VOLTUS Platform</span>
+            </div>
+            <p>&copy; 2026 VOLTUS Technologies. Decentralized Blockchain Certificate Verification Engine.</p>
+        </div>
+    </footer>
 
     <script>
+        lucide.createIcons();
+
         const hashhauler = document.getElementById("hashhauler");
         const namehauler = document.getElementById("namehauler");
         const sbutton = document.getElementById("sh");
+        const dropzone = document.getElementById("dropzone");
+        const fileInput = document.getElementById("fileInput");
+
         sbutton.disabled = true;
 
-        document.getElementById('computeHashButton').onclick = async () => {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add('dropzone-active');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove('dropzone-active');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            if (dt.files && dt.files.length > 0) {
+                fileInput.files = dt.files;
+                processFiles();
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            processFiles();
+        });
+
+        document.getElementById('computeHashButton').onclick = () => {
+            processFiles();
+        };
+
+        async function processFiles() {
             var hashes = [];
             var names = [];
-            const fileInput = document.getElementById('fileInput');
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // Clear previous results
+            resultsDiv.innerHTML = '';
 
-            if (fileInput.files.length === 0) {
-                resultsDiv.innerHTML = '<p class="text-red-500">Please select files.</p>';
+            if (!fileInput.files || fileInput.files.length === 0) {
+                resultsDiv.innerHTML = '<div class="p-3 text-xs text-rose-400 rounded-lg bg-rose-950/40 border border-rose-900/60">Please select at least one file.</div>';
                 return;
             }
 
-            for (const file of fileInput.files) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                const file = fileInput.files[i];
                 const hash = await computeFileHash(file);
-                names.push(file.name.split(".")[0]);
+                const docName = file.name.split(".")[0];
+                names.push(docName);
                 hashes.push(hash);
-                resultsDiv.innerHTML += `<p>${file.name}: <span class="font-semibold">${hash}</span></p>`;
+
+                const cardId = `hash_btn_${i}`;
+                resultsDiv.innerHTML += `
+                    <div class="p-3.5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                        <div class="flex items-center justify-between text-xs font-semibold">
+                            <span class="text-white flex items-center space-x-2">
+                                <i data-lucide="file" class="w-4 h-4 text-blue-400"></i>
+                                <span>${file.name}</span>
+                            </span>
+                            <span class="text-gray-400 font-mono text-[11px]">${(file.size / 1024).toFixed(1)} KB</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-950 p-2.5 rounded-lg border border-gray-800">
+                            <p class="font-mono text-blue-300 text-[11px] truncate max-w-[80%]">${hash}</p>
+                            <button type="button" id="${cardId}" onclick="copyText('${hash}', '${cardId}')" class="btn-press text-[11px] font-medium text-gray-300 hover:text-white px-2.5 py-1 rounded bg-gray-800 border border-gray-700 flex items-center space-x-1">
+                                <i data-lucide="copy" class="w-3 h-3 text-blue-400"></i>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
-            hashhauler.value = hashes;
-            namehauler.value = names;
+            lucide.createIcons();
+
+            hashhauler.value = hashes.join(",");
+            namehauler.value = names.join(",");
             if (hashhauler.value) {
                 sbutton.disabled = false;
+                sbutton.classList.remove('opacity-50', 'cursor-not-allowed');
             }
-        };
+        }
 
         async function computeFileHash(file) {
             const arrayBuffer = await file.arrayBuffer();
@@ -61,6 +328,19 @@
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             return hashHex;
+        }
+
+        function copyText(text, elementId) {
+            navigator.clipboard.writeText(text);
+            const btn = document.getElementById(elementId);
+            if (btn) {
+                btn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-emerald-400"></i><span class="text-emerald-400 font-bold">Copied!</span>';
+                lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = '<i data-lucide="copy" class="w-3 h-3 text-blue-400"></i><span>Copy</span>';
+                    lucide.createIcons();
+                }, 2000);
+            }
         }
     </script>
 </body>

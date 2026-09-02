@@ -7,8 +7,8 @@ urlpatterns = [
     path('locker',views.addToLocker, name='locker'),
     path('apply',views.apply_for_verification, name='apply'),
     path('verify',views.verify, name='verify'),
-    path('logout',views.logout, name='logout'),
-   # path('nonce',views.generate_nonce, name='nonce'),
-   # path('authenticate_wallet',views.authenticate_wallet, name='authenticate_wallet'),
-    
+    path('history', views.transaction_history, name='history'),
+    path('revoke', views.revoke_certificate, name='revoke'),
+    path('docs', views.docs, name='docs'),
+    path('logout', views.logout, name='logout'),
 ]

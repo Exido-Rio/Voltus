@@ -4,6 +4,7 @@ from web3 import Web3
 
 #install_solc("0.8.0")
 
+
 with open("./Locker.sol","r") as r :
     file = r.read()
 
@@ -27,6 +28,9 @@ comple_sol = compile_standard(
 with open("compiled_code.json", "w") as file:
     json.dump(comple_sol, file)
 
+#exit()
+
+
 #get bytecode 
 
 bytecode = comple_sol["contracts"]["Locker.sol"]["Locker"]["evm"][
@@ -43,11 +47,11 @@ with open("abi.json", "w") as file:
     json.dump(abi, file)
 
 
-w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
-chain_id = 1337 
+w3 = Web3(Web3.HTTPProvider("https://eth-sepolia.g.alchemy.com/v2/wafDnstXl2UtqqEnu5My7"))
+chain_id = 11155111
 
-my_address = "your_wallet_address"
-priv_key="private_key"
+my_address = "0x5EFA583053929c91a51F05dFCD9f9759a7535d08"
+priv_key="22a57555eba815cde45e30eeca4d719a7fd4c4a522d8984baae40f6858eb615b"
 
 my_contract = w3.eth.contract(abi=abi,bytecode=bytecode)
 

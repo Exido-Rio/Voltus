@@ -11,39 +11,47 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os,json
+import os, json
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load .env file for local development (ignored on Render where env vars are set in dashboard)
+load_dotenv(BASE_DIR / '.env')
 
-# for blockchain  also these need to be capital to be imported 
-PUBLIC_ADDRESS = "your_wallet_address"
-PRIVATE_KEY="your_walett_private_key"
-INFRA_URL = "http://127.0.0.1:7545"
-CONTRACT_ADRESS = "your_contract_address"
-CHAIN_ID  = 1337
+# ---------- Blockchain Configuration ----------
+# Read from environment variables (set in Render dashboard or local .env)
+PUBLIC_ADDRESS = os.environ.get("PUBLIC_ADDRESS", "")
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY", "")
+INFRA_URL = os.environ.get("INFRA_URL", "")
+CONTRACT_ADRESS = os.environ.get("CONTRACT_ADRESS", "")
+CHAIN_ID = int(os.environ.get("CHAIN_ID", "11155111"))
 
-with open("abi.json","r") as f :
-    file = f.read()
+# Load ABI from Render secret file or local project root
+_abi_paths = [
+    Path("/etc/secrets/abi.json"),   # Render secret file
+    BASE_DIR / "abi.json",           # Local development
+]
+ABI = None
+for _abi_path in _abi_paths:
+    if _abi_path.exists():
+        with open(_abi_path, "r") as f:
+            ABI = json.loads(f.read())
+        break
 
-ABI = json.loads(file)
+if ABI is None:
+    raise RuntimeError("abi.json not found in /etc/secrets/ or project root")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# ---------- Core Django ----------
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'secret_key'
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-REDIS_IP = "127.0.0.1"
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
+ALLOWED_HOSTS = ["*"]
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',    # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,7 +79,7 @@ ROOT_URLCONF = 'VOLTUS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,10 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'VOLTUS.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -96,55 +101,37 @@ DATABASES = {
     }
 }
 
-
-# this is not protected with the password 
+# In-memory caching backend for fast, zero-dependency deployment
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_IP}/:6379/",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "voltus-cache",
     }
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
+# ---------- Static Files (WhiteNoise) ----------
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ---------- Security (production) ----------
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = [f"https://{RENDER_EXTERNAL_HOSTNAME}"] if RENDER_EXTERNAL_HOSTNAME else []
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

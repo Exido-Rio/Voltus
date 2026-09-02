@@ -3,16 +3,20 @@ from datetime import datetime, timedelta
 from web3.auto import w3
 from web3 import Web3
 from eth_account.messages import encode_defunct
+from pathlib import Path
 
 # Algorithm
 # Experation time (how long a user can be login after provide credntial one time)
 
-# Load RSA keys
-with open('private_key.pem', 'r') as f:
-    private_key = f.read()
+# Load RSA keys — try Render secret files first, then project root
+def _load_key(filename):
+    for path in [Path(f"/etc/secrets/{filename}"), Path(filename)]:
+        if path.exists():
+            return path.read_text()
+    raise RuntimeError(f"{filename} not found in /etc/secrets/ or project root")
 
-with open('public_key.pem', 'r') as f:
-    public_key = f.read()
+private_key = _load_key('private_key.pem')
+public_key = _load_key('public_key.pem')
 
 ALGORITHM = "ES384" # most secure for the time being lol 
 ACCESS_TOKEN_EXPIRE_MINUTES = 10
@@ -31,12 +35,13 @@ def verify_access_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, public_key, algorithms=[ALGORITHM])
 
-        id: str = payload.get("user_id") # what we wanna get such user id public wallet address
-        verified : int =  payload.get("verified") 
+        id: str = payload.get("user_id")
+        verified: int = payload.get("verified", 1)
+        if verified is None:
+            verified = 1
         if id is None:
             raise Exception("Data not found")
-        # token_data = schema.ToeknData(id=id) # need to define the type of the needed info that is fetch into the token 
-        return {"user_id":id,"verified":verified}
+        return {"user_id": id, "verified": verified}
     
     except jwt.ExpiredSignatureError:
         raise Exception("Token has expired")
@@ -47,27 +52,24 @@ def verify_access_token(token: str) -> dict:
     
 
 
-def verify_access_nonce(nonce:str) -> True :
+def verify_access_nonce(nonce:str) -> bool:
     try:
         payload = jwt.decode(nonce, public_key, algorithms=[ALGORITHM])
-        
-
         return True
-    
-    except Exception as e :
+    except Exception as e:
         print(e)
         return False 
     
 
 def verify_signature(message, signature, signer_address):
     # Hash the message
-    message_hash = message = encode_defunct(text=message)
+    encoded_message = encode_defunct(text=message)
     
     # Recover the address from the signature
-    recovered_address  = (w3.eth.account.recover_message(message, signature=signature)).lower()
+    recovered_address = (w3.eth.account.recover_message(encoded_message, signature=signature)).lower()
 
-    print(signer_address)
-    print(recovered_address)
+    print("Signer address:", signer_address)
+    print("Recovered address:", recovered_address)
     # Check if the recovered address matches the signer address
-    return recovered_address == signer_address
+    return recovered_address == signer_address.lower()
 

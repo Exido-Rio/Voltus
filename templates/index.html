@@ -1,120 +1,335 @@
-
-
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Authentication</title>
+    <title>VOLTUS — Enterprise Certificate Verification Platform</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
+        :root {
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
         body {
-            background-image: url('https://media.istockphoto.com/id/1987307560/photo/big-data-visualisation-abstract-digital-particles-cyber-network-background-technology-backdrop.webp?s=2048x2048&w=is&k=20&c=s9cG8QycQY-gU2uHv16bMsoBZIVlqLA4C0p7FU-cd9E=');
-            background-size: cover;
-            background-position: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .btn-press {
+            transition: transform 100ms var(--ease-out), background-color 150ms ease, border-color 150ms ease;
+        }
+        .btn-press:active {
+            transform: scale(0.98);
+        }
+        .saas-card {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .saas-card-hover {
+            transition: border-color 200ms ease, transform 200ms ease;
+        }
+        .saas-card-hover:hover {
+            border-color: #374151;
+            transform: translateY(-2px);
+        }
+        .animate-fade-in {
+            animation: fadeIn 350ms var(--ease-out) forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
-<body class="flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-50">
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-blue-600 selection:text-white">
 
-    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Welcome to Certificate  Verification System</h1>
-        <p class="text-center text-gray-600 mb-6">Connect your wallet to access exclusive features and services.</p>
+    <!-- Global Header -->
+    <header class="w-full bg-[#090d16]/90 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg font-bold tracking-tight text-white">VOLTUS</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono border border-gray-700">Enterprise</span>
+                </div>
+            </a>
 
-        {% if authenticated %}
-        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Dashboard</h2>
-        <ul class="space-y-2">
+            <nav class="flex items-center space-x-3 text-sm font-medium">
+                <a href="/verify" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="search" class="w-4 h-4 text-blue-400"></i>
+                    <span>Verify Document</span>
+                </a>
+                <a href="/docs" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="book-open" class="w-4 h-4 text-gray-400"></i>
+                    <span>Docs</span>
+                </a>
+                {% if authenticated %}
+                    <a href="/locker" class="btn-press px-4 py-2 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 transition flex items-center space-x-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <span>Issuer Locker</span>
+                    </a>
+                    <a href="/history" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                        <i data-lucide="history" class="w-4 h-4 text-blue-400"></i>
+                        <span>History</span>
+                    </a>
+                    <a href="/apply" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                        <i data-lucide="building-2" class="w-4 h-4 text-gray-400"></i>
+                        <span>Organization</span>
+                    </a>
+                    <a href="/logout" onclick="document.cookie = 'auth=; Path=/;';" class="btn-press px-3.5 py-2 rounded-lg text-rose-400 hover:bg-rose-950/30 border border-rose-900/40 transition flex items-center space-x-1.5">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span>Logout</span>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-            {% if verified %}
-            <li>
-                <a href="locker" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Locker</a>
-            </li>
-            {% else %}
-            <li>
-                <a href="apply" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Apply for your account Verification</a>
-            </li>
-            {% endif %}
-            <li>
-                <a href="logout" onclick="document.cookie = 'auth=; Path=/;';" class="block text-center text-white bg-red-500 hover:bg-red-600 rounded-lg py-2 transition">Logout</a>
-            </li>
-        </ul>
-        {% else %}
-        <div class="text-center mb-4">
-            <button id="connectButton" type="button" class="w-full text-white bg-green-500 hover:bg-green-600 rounded-lg py-2 transition">
-                Connect with MetaMask
-            </button>
-            <div id="status" class="mt-2 text-gray-600"></div>
+    <!-- Main Content -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-6 py-12 flex flex-col justify-center">
+
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-950/50 border border-blue-800/60 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-6">
+                <i data-lucide="blocks" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Ethereum Sepolia Network • Smart Contract Engine</span>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                Tamper-Proof Certificate Verification Platform
+            </h1>
+
+            <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+                Voltus enables universities, enterprise issuers, and certification authorities to anchor official document digests directly to immutable smart contracts.
+            </p>
+
+            <div class="flex items-center justify-center space-x-4">
+                <a href="/verify" class="btn-press px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-md flex items-center space-x-2">
+                    <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                    <span>Verify a Certificate</span>
+                </a>
+                {% if not authenticated %}
+                <a href="#auth-section" class="btn-press px-6 py-3.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-sm border border-gray-700 flex items-center space-x-2">
+                    <i data-lucide="key" class="w-4 h-4 text-gray-400"></i>
+                    <span>Issuer Sign In</span>
+                </a>
+                {% else %}
+                <a href="/locker" class="btn-press px-6 py-3.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-sm border border-gray-700 flex items-center space-x-2">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-400"></i>
+                    <span>Go to Certificate Locker</span>
+                </a>
+                {% endif %}
+            </div>
         </div>
 
-        <form action="" method="post" class="mt-4">
-            {% csrf_token %}
-            <input type="text" id="walletaddress" name="walletaddress" hidden>
-            <input type="text" id="message" name="message" value="{{message}}" hidden>
-            <input type="text" id="signature" name="signature" hidden>
+        <!-- Auth / Portal Card -->
+        <div id="auth-section" class="max-w-xl mx-auto w-full saas-card rounded-2xl p-8 mb-16 animate-fade-in">
+            
+            {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                <div class="p-4 text-sm rounded-xl border flex items-center space-x-3 {% if message.tags == 'error' %}bg-rose-950/40 border-rose-800/60 text-rose-300{% else %}bg-emerald-950/40 border-emerald-800/60 text-emerald-300{% endif %}">
+                    <i data-lucide="{% if message.tags == 'error' %}alert-circle{% else %}check-circle-2{% endif %}" class="w-5 h-5 flex-shrink-0"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
 
-            <button disabled type="submit" id="login" class="w-full text-white bg-gray-400 cursor-not-allowed rounded-lg py-2 transition">
-                Sign in with Wallet
-            </button>
-        </form>
-        {% endif %}
+            {% if authenticated %}
+            <!-- Authenticated State -->
+            <div class="space-y-6">
+                <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i data-lucide="wallet" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Session Authenticated</p>
+                            <p class="text-sm font-semibold text-white">MetaMask Account Connected</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-400 text-xs font-semibold border border-emerald-800/60 flex items-center space-x-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>Verified Issuer</span>
+                    </span>
+                </div>
 
-        <ul class="mt-4">
-            <li>
-                <a href="verify" class="block text-center text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 transition">Verify Certificate</a>
-            </li>
-        </ul>
+                <div class="grid grid-cols-1 gap-3">
+                    <a href="/locker" class="btn-press py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm text-center flex items-center justify-center space-x-2">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                        <span>Open Certificate Locker (Publish Hashes)</span>
+                    </a>
+                    <div class="grid grid-cols-3 gap-3 pt-1">
+                        <a href="/history" class="btn-press py-3 px-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium text-center border border-gray-700 flex items-center justify-center space-x-1.5">
+                            <i data-lucide="history" class="w-3.5 h-3.5 text-blue-400"></i>
+                            <span>History Log</span>
+                        </a>
+                        <a href="/verify" class="btn-press py-3 px-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium text-center border border-gray-700 flex items-center justify-center space-x-1.5">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-cyan-400"></i>
+                            <span>Public Audit</span>
+                        </a>
+                        <a href="/apply" class="btn-press py-3 px-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium text-center border border-gray-700 flex items-center justify-center space-x-1.5">
+                            <i data-lucide="settings" class="w-3.5 h-3.5 text-gray-400"></i>
+                            <span>Org Profile</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-        <footer class="mt-6 text-center text-gray-500">
-            <p>&copy; 2024 VOLTUS.Pvt.Ltd All rights reserved.</p>
-        </footer>
-    </div>
+            {% else %}
 
-    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+            <!-- Login State -->
+            <div class="space-y-6">
+                <div class="border-b border-gray-800 pb-4">
+                    <h2 class="text-xl font-bold text-white mb-1">Issuer Portal Authentication</h2>
+                    <p class="text-gray-400 text-xs">Cryptographic wallet signature login for verified credential issuers.</p>
+                </div>
+
+                <button id="connectButton" type="button" class="btn-press w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-sm flex items-center justify-center space-x-2">
+                    <i data-lucide="key-round" class="w-4 h-4"></i>
+                    <span>Connect with MetaMask</span>
+                </button>
+
+                <div id="status" class="text-center text-xs font-mono text-gray-400 min-h-[1.25rem]"></div>
+
+                <form id="authForm" action="" method="post" class="hidden">
+                    {% csrf_token %}
+                    <input type="text" id="walletaddress" name="walletaddress">
+                    <input type="text" id="message" name="message" value="{{message}}">
+                    <input type="text" id="signature" name="signature">
+                </form>
+
+                <div class="pt-4 border-t border-gray-800 text-center">
+                    <a href="/verify" class="text-xs font-medium text-blue-400 hover:text-blue-300 transition inline-flex items-center space-x-1">
+                        <span>Looking to verify a student/employee document? Use Public Portal</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 3-Step Process Diagram -->
+        <div class="mb-12">
+            <div class="text-center mb-8">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Platform Architecture</h3>
+                <h2 class="text-2xl font-bold text-white mt-1">How Voltus Anchors Certificates</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Step 1 -->
+                <div class="saas-card saas-card-hover rounded-xl p-6">
+                    <div class="w-8 h-8 rounded-lg bg-blue-950 text-blue-400 font-mono font-bold text-sm flex items-center justify-center border border-blue-800/60 mb-4">
+                        01
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Browser Digest Computation</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Documents are hashed locally using W3C standard <code class="mono text-blue-300">SubtleCrypto SHA-512</code>. Files never leave the browser, preserving 100% data privacy.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="saas-card saas-card-hover rounded-xl p-6">
+                    <div class="w-8 h-8 rounded-lg bg-blue-950 text-blue-400 font-mono font-bold text-sm flex items-center justify-center border border-blue-800/60 mb-4">
+                        02
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Smart Contract Commit</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        The SHA-512 digest and issuer metadata are written to Solidity smart contract <code class="mono text-blue-300">Locker.sol</code> on Ethereum Sepolia.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="saas-card saas-card-hover rounded-xl p-6">
+                    <div class="w-8 h-8 rounded-lg bg-blue-950 text-blue-400 font-mono font-bold text-sm flex items-center justify-center border border-blue-800/60 mb-4">
+                        03
+                    </div>
+                    <h4 class="text-base font-bold text-white mb-2">Zero-Friction Audit</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Employers and institutions verify certificate authenticity instantly on the public audit portal without accounts or fees.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#090d16] border-t border-gray-800 py-6 px-6 text-xs text-gray-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
+                <span class="font-semibold text-gray-400">VOLTUS Platform</span>
+            </div>
+            <p>&copy; 2026 VOLTUS Technologies. Decentralized Blockchain Certificate Verification Engine.</p>
+        </div>
+    </footer>
+
     <script>
-        // this causes the popup to the wallets (like metamask to sign the msg for auth )
-        const message = document.getElementById("message").value;
+        lucide.createIcons();
+
+        const message = document.getElementById("message") ? document.getElementById("message").value : "";
         const walletaddress = document.getElementById("walletaddress");
         const signature_msg = document.getElementById("signature");
-        const loginbutton = document.getElementById("login");
-        loginbutton.disabled = true;
+        const authForm = document.getElementById("authForm");
 
-        document.getElementById('connectButton').onclick = async () => {
-            if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const wAddress = accounts[0];
-                    if (wAddress) {
-                        loginbutton.disabled = false;
-                        walletaddress.value = wAddress;
-                        document.getElementById('status').innerText = `Connected: ${wAddress}`;
-                        document.getElementById("connectButton").innerHTML = "Connected!";
+        const connectBtn = document.getElementById('connectButton');
+        if (connectBtn) {
+            connectBtn.onclick = async () => {
+                const statusDiv = document.getElementById('status');
+                if (window.ethereum) {
+                    try {
+                        statusDiv.innerHTML = '<span class="text-blue-400">Connecting to MetaMask...</span>';
+                        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                        const wAddress = accounts[0];
+                        if (wAddress) {
+                            walletaddress.value = wAddress;
+                            statusDiv.innerHTML = `<span class="text-emerald-400">Wallet Connected. Please sign in MetaMask...</span>`;
 
-                        // signing the msg 
-                        const signature = await window.ethereum.request({
-                            method: 'personal_sign',
-                            params: [walletaddress.value, message],
-                        });
+                            // Prompt MetaMask personal_sign (message challenge first, address second)
+                            const signature = await window.ethereum.request({
+                                method: 'personal_sign',
+                                params: [message, wAddress],
+                            });
 
-                        signature_msg.value = signature;
-
-                        console.log(message.value);
-                        console.log(document.getElementById("signature").value);
-                    } else {
-                        document.getElementById('status').innerText = `Failed to connect, try again.`;
+                            signature_msg.value = signature;
+                            statusDiv.innerHTML = `<span class="text-emerald-400 font-semibold">Signature Verified. Logging in...</span>`;
+                            
+                            authForm.submit();
+                        } else {
+                            statusDiv.innerHTML = '<span class="text-rose-400">Failed to connect wallet address.</span>';
+                        }
+                    } catch (error) {
+                        console.error("Wallet authentication error:", error);
+                        statusDiv.innerHTML = '<span class="text-rose-400">Error: ' + error.message + '</span>';
                     }
-                } catch (error) {
-                    console.error("Error connecting wallet:", error);
-                    document.getElementById('status').innerText = 'Error: ' + error.message;
+                } else {
+                    statusDiv.innerHTML = '<span class="text-amber-400">MetaMask extension not detected. Please install MetaMask.</span>';
                 }
-            } else {
-                document.getElementById('status').innerText = "Please install MetaMask!";
-            }
-        };
+            };
+        }
     </script>
 </body>
 
 </html>
-

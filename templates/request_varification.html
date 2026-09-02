@@ -1,21 +1,184 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply for Verification</title>
+    <title>Organization Profile — VOLTUS Enterprise</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .btn-press {
+            transition: transform 100ms var(--ease-out), background-color 150ms ease, border-color 150ms ease;
+        }
+        .btn-press:active {
+            transform: scale(0.98);
+        }
+        .saas-card {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .animate-fade-in {
+            animation: fadeIn 350ms var(--ease-out) forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<body>
-    {% if msg %}
-    <h1>{{msg}}</h1>
-    {% else %}
-    <h1>Apply here to verify </h1>
-    <p>No Availble yet </p>
-    {% endif %}
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-blue-600 selection:text-white">
 
+    <!-- Global Header -->
+    <header class="w-full bg-[#090d16]/90 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg font-bold tracking-tight text-white">VOLTUS</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono border border-gray-700">Issuer Settings</span>
+                </div>
+            </a>
 
+            <nav class="flex items-center space-x-3 text-sm font-medium">
+                <a href="/" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="home" class="w-4 h-4 text-gray-400"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/locker" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
+                    <span>Locker</span>
+                </a>
+                <a href="/history" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="history" class="w-4 h-4 text-blue-400"></i>
+                    <span>History</span>
+                </a>
+                <a href="/docs" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
+                    <i data-lucide="book-open" class="w-4 h-4 text-gray-400"></i>
+                    <span>Docs</span>
+                </a>
+                <a href="/logout" onclick="document.cookie = 'auth=; Path=/;';" class="btn-press px-3.5 py-2 rounded-lg text-rose-400 hover:bg-rose-950/30 border border-rose-900/40 transition flex items-center space-x-1.5">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-2xl w-full mx-auto px-6 py-10">
+        
+        <div class="saas-card rounded-2xl p-8 animate-fade-in">
+            <!-- Title Header -->
+            <div class="flex items-center justify-between pb-6 mb-6 border-b border-gray-800">
+                <div>
+                    <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-blue-950/60 border border-blue-800/60 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                        <span>Institutional Issuer Credentials</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white">Organization Profile</h1>
+                    <p class="text-gray-400 text-xs md:text-sm mt-1">
+                        Manage issuing authority metadata anchored alongside on-chain certificate commits.
+                    </p>
+                </div>
+                <div class="px-2.5 py-1 rounded bg-emerald-950 border border-emerald-800/60 text-emerald-400 text-xs font-semibold flex items-center space-x-1.5 self-start">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Verified</span>
+                </div>
+            </div>
+
+            {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                <div class="p-4 text-sm rounded-xl border flex items-center space-x-3 bg-emerald-950/40 border-emerald-800/60 text-emerald-300">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 flex-shrink-0 text-emerald-400"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form action="/apply" method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Authenticated Wallet Address</label>
+                    <div class="relative">
+                        <input type="text" value="{{ user_id }}" disabled class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs mono text-blue-300 cursor-not-allowed pr-10">
+                        <i data-lucide="wallet" class="w-4 h-4 text-gray-500 absolute right-3.5 top-3.5"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Organization / University Name</label>
+                    <div class="relative">
+                        <input type="text" name="company_name" value="{{ signer.Company_Name }}" placeholder="e.g. Stanford University or Acme Certification Board" class="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 pl-10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition">
+                        <i data-lucide="building" class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Issuer Officer Title / Position</label>
+                    <div class="relative">
+                        <input type="text" name="position" value="{{ signer.position }}" placeholder="e.g. Chief Registrar or Director of Credentials" class="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 pl-10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition">
+                        <i data-lucide="user-check" class="w-4 h-4 text-gray-500 absolute left-3.5 top-3.5"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1.5">Organization Overview / Details</label>
+                    <textarea name="info" rows="3" placeholder="Brief info about your credential issuing authority..." class="w-full bg-gray-900 border border-gray-800 rounded-xl p-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition">{{ signer.info }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-press w-full py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold text-white text-sm shadow-sm flex items-center justify-center space-x-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>Save Profile Details</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#090d16] border-t border-gray-800 py-6 px-6 text-xs text-gray-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
+                <span class="font-semibold text-gray-400">VOLTUS Platform</span>
+            </div>
+            <p>&copy; 2026 VOLTUS Technologies. Decentralized Blockchain Certificate Verification Engine.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>

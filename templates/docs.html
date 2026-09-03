@@ -56,28 +56,28 @@
 
     <!-- Global Header -->
     <header class="w-full bg-[#090d16]/90 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
+                    <i data-lucide="shield-check" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <span class="text-lg font-bold tracking-tight text-white">VOLTUS</span>
-                    <span class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono border border-gray-700">Documentation</span>
+                    <span class="text-base sm:text-lg font-bold tracking-tight text-white">VOLTUS</span>
+                    <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono border border-gray-700">Docs</span>
                 </div>
             </a>
 
-            <nav class="flex items-center space-x-3 text-sm font-medium">
-                <a href="/" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
-                    <i data-lucide="home" class="w-4 h-4 text-gray-400"></i>
+            <nav class="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm font-medium">
+                <a href="/" class="btn-press px-2.5 sm:px-3.5 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-1.5 border border-transparent hover:border-gray-700">
+                    <i data-lucide="home" class="w-3.5 h-3.5 text-gray-400"></i>
                     <span>Home</span>
                 </a>
-                <a href="/verify" class="btn-press px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-2 border border-transparent hover:border-gray-700">
-                    <i data-lucide="search" class="w-4 h-4 text-blue-400"></i>
+                <a href="/verify" class="btn-press px-2.5 sm:px-3.5 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/80 transition flex items-center space-x-1.5 border border-transparent hover:border-gray-700">
+                    <i data-lucide="search" class="w-3.5 h-3.5 text-blue-400"></i>
                     <span>Verify</span>
                 </a>
-                <a href="/docs" class="btn-press px-4 py-2 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 transition flex items-center space-x-2">
-                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                <a href="/docs" class="btn-press px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 transition flex items-center space-x-1.5">
+                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
                     <span>Docs</span>
                 </a>
             </nav>
@@ -85,9 +85,9 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 max-w-4xl w-full mx-auto px-6 py-10">
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
         
-        <div class="saas-card rounded-2xl p-8 md:p-10 animate-fade-in space-y-10">
+        <div class="saas-card rounded-2xl p-5 sm:p-8 md:p-10 animate-fade-in space-y-8 sm:space-y-10">
             
             <!-- Page Header -->
             <div class="border-b border-gray-800 pb-6">
@@ -95,25 +95,25 @@
                     <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
                     <span>System Guide & Protocol</span>
                 </div>
-                <h1 class="text-3xl font-extrabold text-white">VOLTUS Platform Documentation</h1>
-                <p class="text-gray-400 text-sm mt-1">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">VOLTUS Platform Documentation</h1>
+                <p class="text-gray-400 text-xs sm:text-sm mt-1">
                     Operational rules for Certificate Issuers and instructions for Public Verifiers.
                 </p>
             </div>
 
             <!-- Important Warning Callout for Issuers -->
-            <div class="p-6 rounded-xl bg-amber-950/40 border border-amber-800/60 space-y-3">
-                <div class="flex items-center space-x-2 text-amber-300 font-bold text-base">
-                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400"></i>
+            <div class="p-5 sm:p-6 rounded-xl bg-amber-950/40 border border-amber-800/60 space-y-3">
+                <div class="flex items-center space-x-2 text-amber-300 font-bold text-sm sm:text-base">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 flex-shrink-0"></i>
                     <span>CRITICAL OPERATIONAL RULE FOR ISSUERS</span>
                 </div>
                 <p class="text-xs md:text-sm text-amber-200/90 leading-relaxed">
                     When you upload certificate files in the <strong class="text-white">Certificate Locker (/locker)</strong>, the <strong>Recipient Name is automatically extracted from the uploaded filename</strong>.
                 </p>
-                <div class="p-3.5 rounded-lg bg-gray-950 border border-amber-900/50 text-xs font-mono text-gray-300 space-y-1">
-                    <p class="text-gray-400">Example Filename Formatting:</p>
-                    <p class="text-emerald-400">✔ John_Doe_BSc_Computer_Science.pdf &rarr; Recipient: <span class="text-white font-bold">John_Doe_BSc_Computer_Science</span></p>
-                    <p class="text-rose-400">✖ scan_00129_final.pdf &rarr; Recipient: <span class="text-white font-bold">scan_00129_final</span></p>
+                <div class="p-3.5 rounded-lg bg-gray-950 border border-amber-900/50 text-xs font-mono text-gray-300 space-y-1.5 overflow-x-auto">
+                    <p class="text-gray-400 font-sans text-[11px]">Example Filename Formatting:</p>
+                    <p class="text-emerald-400 whitespace-nowrap">✔ John_Doe_BSc_Computer_Science.pdf &rarr; Recipient: <span class="text-white font-bold">John_Doe_BSc_Computer_Science</span></p>
+                    <p class="text-rose-400 whitespace-nowrap">✖ scan_00129_final.pdf &rarr; Recipient: <span class="text-white font-bold">scan_00129_final</span></p>
                 </div>
                 <p class="text-xs text-amber-300/80 italic">
                     Always rename your certificate files to include the student or recipient's full name prior to dragging them into the locker.
@@ -122,13 +122,13 @@
 
             <!-- Section 1: Issuer Guide -->
             <div class="space-y-4">
-                <h2 class="text-xl font-bold text-white flex items-center space-x-2 border-b border-gray-800 pb-3">
+                <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2 border-b border-gray-800 pb-3">
                     <i data-lucide="building-2" class="w-5 h-5 text-blue-400"></i>
                     <span>1. Guide for Certificate Issuers</span>
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                    <div class="p-4 sm:p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
                         <div class="flex items-center space-x-2 text-blue-400 font-bold text-sm">
                             <i data-lucide="shield-check" class="w-4 h-4"></i>
                             <span>100% Client-Side Privacy</span>
@@ -138,7 +138,7 @@
                         </p>
                     </div>
 
-                    <div class="p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                    <div class="p-4 sm:p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
                         <div class="flex items-center space-x-2 text-blue-400 font-bold text-sm">
                             <i data-lucide="blocks" class="w-4 h-4"></i>
                             <span>Solidity Smart Contract</span>
@@ -148,7 +148,7 @@
                         </p>
                     </div>
 
-                    <div class="p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                    <div class="p-4 sm:p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
                         <div class="flex items-center space-x-2 text-blue-400 font-bold text-sm">
                             <i data-lucide="history" class="w-4 h-4"></i>
                             <span>Zero-RPC History Log</span>
@@ -158,7 +158,7 @@
                         </p>
                     </div>
 
-                    <div class="p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                    <div class="p-4 sm:p-5 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
                         <div class="flex items-center space-x-2 text-rose-400 font-bold text-sm">
                             <i data-lucide="ban" class="w-4 h-4"></i>
                             <span>On-Chain Revocation</span>
@@ -172,7 +172,7 @@
 
             <!-- Section 2: Verifier Guide -->
             <div class="space-y-4">
-                <h2 class="text-xl font-bold text-white flex items-center space-x-2 border-b border-gray-800 pb-3">
+                <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2 border-b border-gray-800 pb-3">
                     <i data-lucide="search" class="w-5 h-5 text-emerald-400"></i>
                     <span>2. Guide for Public Verifiers</span>
                 </h2>
@@ -184,7 +184,7 @@
                             <span>How to Audit a Certificate</span>
                         </h3>
                         <p class="text-gray-400 leading-relaxed">
-                            Visit the Public Audit Portal at <a href="/verify" class="text-blue-400 hover:underline">/verify</a>. Drag and drop the candidate certificate file (PDF, PNG, JPG) or paste its 128-character SHA-512 digest.
+                            Visit the Public Audit Portal at <a href="/verify" class="text-blue-400 hover:underline font-semibold">/verify</a>. Drag and drop the candidate certificate file (PDF, PNG, JPG) or paste its 128-character SHA-512 digest.
                         </p>
                     </div>
 
@@ -198,17 +198,20 @@
                         </p>
                     </div>
 
-                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 space-y-2">
+                    <div class="p-4 rounded-xl bg-gray-900 border border-gray-800 space-y-3">
                         <h3 class="font-bold text-white text-sm">Audit Status Indicators</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                            <div class="p-2.5 rounded bg-emerald-950 border border-emerald-800/60 text-emerald-300 font-semibold text-center">
-                                Verified Authentic
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                            <div class="p-3 rounded-xl bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 font-semibold text-center flex items-center justify-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span>Verified Authentic</span>
                             </div>
-                            <div class="p-2.5 rounded bg-rose-950 border border-rose-900/60 text-rose-300 font-semibold text-center">
-                                Revoked by Issuer
+                            <div class="p-3 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-300 font-semibold text-center flex items-center justify-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                                <span>Revoked by Issuer</span>
                             </div>
-                            <div class="p-2.5 rounded bg-gray-950 border border-gray-800 text-gray-400 font-semibold text-center">
-                                Unregistered / Modified
+                            <div class="p-3 rounded-xl bg-gray-950 border border-gray-800 text-gray-400 font-semibold text-center flex items-center justify-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                                <span>Unregistered / Modified</span>
                             </div>
                         </div>
                     </div>
@@ -216,12 +219,12 @@
             </div>
 
             <!-- Footer Action -->
-            <div class="pt-6 border-t border-gray-800 flex items-center justify-between">
-                <a href="/verify" class="btn-press py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center space-x-2 shadow-sm">
+            <div class="pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <a href="/verify" class="btn-press w-full sm:w-auto py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-md">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                     <span>Go to Public Audit Portal</span>
                 </a>
-                <a href="/locker" class="btn-press py-3 px-5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs border border-gray-700 flex items-center space-x-2">
+                <a href="/locker" class="btn-press w-full sm:w-auto py-3.5 px-6 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs sm:text-sm border border-gray-700 flex items-center justify-center space-x-2">
                     <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
                     <span>Go to Certificate Locker</span>
                 </a>
